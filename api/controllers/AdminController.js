@@ -1,6 +1,6 @@
-const { Booking } = require("../models/BookingModel");
-const { Place } = require("../models/PlaceModel");
-const { TripPricing } = require("../models/TripPricingModel");
+// const { Booking } = require("../models/BookingModel");
+// const { Place } = require("../models/PlaceModel");
+// const { TripPricing } = require("../models/TripPricingModel");
 
 exports.getBookings = (req, res) => {
   Booking.find(function (err, bookings) {

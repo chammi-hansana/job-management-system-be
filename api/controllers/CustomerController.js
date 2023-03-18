@@ -1,41 +1,150 @@
-const { Booking } = require("../models/BookingModel");
-const { Place } = require("../models/PlaceModel");
+// const { Booking } = require("../models/BookingModel");
+const { Job } = require("../models/JobModel");
+const { JobReq } = require("../models/JobReqModel");
 
-exports.addBooking = async (req, res) => {
-  let newBooking = new Booking(req.body);
-  console.log("new booking adding", req.body);
+exports.addJob = async (req, res) => {
+  let newJob = new Job(req.body);
+  console.log("new job adding", req.body);
 
-  await newBooking.save((err, booking) => {
+  await newJob.save((err, job) => {
     if (err) {
       return res.status(422).json({
         success: false,
-        message: "Unable to create Booking!",
+        message: "Unable to create job!",
         data: err,
       });
     } else {
       return res.status(200).json({
         success: true,
-        message: "New Booking is created!",
-        data: booking,
+        message: "New job is created!",
+        data: job,
       });
     }
   });
 };
 
-exports.getPlaces = (req, res) => {
-  Place.find(function (err, places) {
+exports.getJobs = (req, res) => {
+  Job.find(function (err, jobs) {
     if (err) {
       return res.status(422).json({
         success: false,
-        message: "Unable to retrieve places!",
+        message: "Unable to retrieve jobs!",
         data: err,
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Received places!",
-      data: places,
+      message: "Received jobs!",
+      data: jobs,
     });
   });
+};
+
+exports.applyJob = async (req, res) => {
+  let newJob = new JobReq(req.body);
+  console.log("new job req adding", req.body);
+
+  await newJob.save((err, job) => {
+    if (err) {
+      return res.status(422).json({
+        success: false,
+        message: "Unable to create job req!",
+        data: err,
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "New job req is created!",
+        data: job,
+      });
+    }
+  });
+};
+
+exports.getJobReq = async (req, res) => {
+  const userId = String(req.user._id);
+  console.log("userId", req.user._id);
+
+  if(!req.query.jobId) {
+    try {
+      await JobReq.find({ user_id: userId }).populate('user_id').populate('job_id').exec((error, job) => {
+        if (!job) {
+          return res.status(404).json({
+            success: false,
+            message: "job req not found",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "job req found!",
+          data: job,
+        });
+      });
+    } catch (error) {
+      console.log("error")
+    }
+  } else {
+    try {
+      await JobReq.find({ job_id: req.query.jobId }).populate('user_id').populate('job_id').exec((error, job) => {
+        if (!job) {
+          return res.status(404).json({
+            success: false,
+            message: "job req not found",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "job req found!",
+          data: job,
+        });
+      });
+    } catch (error) {
+      console.log("error")
+    }
+  }
+
+
+
+};
+
+exports.updateJobReq = (req, res) => {
+  JobReq.findOneAndUpdate(
+    { _id: req.params.reqId },
+    { $set: req.body },
+    { new: true },
+
+    function (err, job) {
+      if (err) {
+        return res.status(422).json({
+          success: false,
+          message: "Error occured while processing the request",
+        });
+      }
+
+      if (!job) {
+        return res.status(422).json({
+          success: false,
+          message: "Invalid job id!",
+        });
+      }
+
+      JobReq.findOne({ _id: req.params.reqId }, function (err, job) {
+        if (err) {
+          return res.status(422).json({
+            success: false,
+            message: `Unable to retrieve the job! ${req.params.jobId}`,
+            data: err,
+          });
+        }
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Job updated!!",
+        data: job,
+      });
+    }
+  )
+  // .populate({path: 'user_id', select: ''}).then(());
 };

@@ -11,13 +11,21 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
   name: {
     type: String,
-    required: [true, "Username field is required!"],
+    required: [true, "name field is required!"],
     unique: true,
   },
   phone: {
     type: String,
-    required: [true, "Username field is required!"],
+    required: [true, "phone field is required!"],
     unique: true,
+  },
+  age: {
+    type: String,
+    required: [true, "Age field is required!"],
+  },
+  address: {
+    type: String,
+    required: [true, "Address field is required!"],
   },
   email: {
     type: String,
@@ -31,12 +39,13 @@ let UserSchema = new Schema({
   password: {
     type: String,
     // minlength: 5,
+    maxLength: 10,
     required: [true, "Password field is required!"],
   },
   userType: {
     type: String,
     enum: UserRole,
-    default: UserRole.ADMIN,
+    required: [true, "User type field is required!"],
   },
 });
 
