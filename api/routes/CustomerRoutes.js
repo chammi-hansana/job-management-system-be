@@ -7,4 +7,7 @@ module.exports = function (app) {
   app.post("/apply-job", [Auth], CustomerController.applyJob);
   app.get("/get-job-req", [Auth], CustomerController.getJobReq);
   app.put("/update-job-req/:reqId", [Auth], CustomerController.updateJobReq);
+  app.get("/get-filtered-job-req", [Auth], CustomerController.getFilteredJobReq);
+  app.get("/get-all-users", [Auth], CustomerController.getAllUsers);
+  app.post("/delete-user", [Auth], CustomerController.deleteUser);
 };

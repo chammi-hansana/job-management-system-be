@@ -12,6 +12,12 @@ let JobModelSchema = new Schema({
     type: String,
     required: [true, "Title is required!"],
   },
+  date: {
+    type: String,
+  },
+  details: {
+    type: String,
+  },
   desc: {
     type: String,
     required: [true, "Description is required!"],

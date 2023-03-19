@@ -1,6 +1,7 @@
 // const { Booking } = require("../models/BookingModel");
 const { Job } = require("../models/JobModel");
 const { JobReq } = require("../models/JobReqModel");
+const { User } = require("../models/UserModel");
 
 exports.addJob = async (req, res) => {
   let newJob = new Job(req.body);
@@ -66,7 +67,8 @@ exports.getJobReq = async (req, res) => {
   const userId = String(req.user._id);
   console.log("userId", req.user._id);
 
-  if(!req.query.jobId) {
+  if (!req.query.jobId) {
+    // for job seeker
     try {
       await JobReq.find({ user_id: userId }).populate('user_id').populate('job_id').exec((error, job) => {
         if (!job) {
@@ -147,4 +149,69 @@ exports.updateJobReq = (req, res) => {
     }
   )
   // .populate({path: 'user_id', select: ''}).then(());
+};
+
+exports.getFilteredJobReq = async (req, res) => {
+
+  try {
+    await JobReq.find({}).populate('user_id').populate('job_id').exec((error, job) => {
+      if (!job) {
+        return res.status(404).json({
+          success: false,
+          message: "job req not found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "job req found!",
+        data: job,
+      });
+    });
+  } catch (error) {
+    console.log("error")
+  }
+
+};
+
+exports.getAllUsers = (req, res) => {
+  User.find(function (err, users) {
+    if (err) {
+      return res.status(422).json({
+        success: false,
+        message: "Unable to retrieve users!",
+        data: err,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Received users!",
+      data: users,
+    });
+  });
+};
+
+exports.deleteUser = (req, res) => {
+  // try {
+  //   User.deleteOne({ _id: req.body.user_id })
+  //   res.status(200).json({ success: true, message: 'User successfully deleted !' })
+
+
+  // } catch (error) {
+  //   res.status(500).json({ success: false, error: error })
+  // }
+
+  User.deleteOne({ _id: req.body.user_id })
+      .then(result => {
+        if (result.deletedCount === 1) {
+          console.log(`Document  deleted successfully.`);
+          res.status(200).json({ success: true, message: 'User successfully deleted !' })
+        } else {
+          console.log(`Document not found.`);
+          res.status(200).json({ success: false, message: `Document with ID ${idToDelete} not found.` })
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
 };
