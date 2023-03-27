@@ -292,7 +292,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"admin\",\n    \"phone\": \"0912290414\",\n    \"age\": \"23\",\n    \"address\": \"Galle\",\n    \"email\": \"admin@mail.com\",\n    \"userType\": \"Admin\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"name\": \"admin\",\n    \"phone\": \"0912290414\",\n    \"age\": \"23\",\n    \"address\": \"Galle\",\n    \"email\": \"admin@gmail.com\",\n    \"userType\": \"Admin\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -320,7 +320,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@mail.com\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
