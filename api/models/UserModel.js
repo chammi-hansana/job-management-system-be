@@ -19,10 +19,6 @@ let UserSchema = new Schema({
     required: [true, "phone field is required!"],
     unique: true,
   },
-  age: {
-    type: String,
-    required: [true, "Age field is required!"],
-  },
   address: {
     type: String,
     required: [true, "Address field is required!"],

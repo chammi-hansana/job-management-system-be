@@ -1,5 +1,5 @@
 // const { Booking } = require("../models/BookingModel");
-const { Job } = require("../models/JobModel");
+const { Post } = require("../models/PostModel");
 const { JobReq } = require("../models/JobReqModel");
 const { User } = require("../models/UserModel");
 
@@ -24,23 +24,26 @@ exports.addJob = async (req, res) => {
   });
 };
 
-exports.getJobs = (req, res) => {
-  Job.find(function (err, jobs) {
+exports.getAllPosts = (req, res) => {
+  Post.find(function (err, posts) {
     if (err) {
-      return res.status(422).json({
-        success: false,
-        message: "Unable to retrieve jobs!",
-        data: err,
+      console.log('err', err);
+      // return res.status(422).json({
+      //   success: false,
+      //   message: "Unable to retrieve posts!",
+      //   data: err,
+      // });
+    } else {
+      console.log('p', posts);
+      return res.status(200).json({
+        success: true,
+        message: "Received posts!",
+        data: posts,
       });
     }
-
-    return res.status(200).json({
-      success: true,
-      message: "Received jobs!",
-      data: jobs,
-    });
   });
 };
+
 
 exports.applyJob = async (req, res) => {
   let newJob = new JobReq(req.body);
@@ -62,6 +65,29 @@ exports.applyJob = async (req, res) => {
     }
   });
 };
+
+exports.addNewPost = async (req, res) => {
+  let addNewPost = new Post(req.body);
+  console.log("new job adding", req.body);
+
+  // save post in jobs collection in mongodb
+  await addNewPost.save((err, post) => {
+    if (err) {
+      return res.status(422).json({
+        success: false,
+        message: "Unable to create post!",
+        data: err,
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "New post is created!",
+        data: post,
+      });
+    }
+  })
+
+}
 
 exports.getJobReq = async (req, res) => {
   const userId = String(req.user._id);
@@ -206,6 +232,22 @@ exports.deleteUser = (req, res) => {
         if (result.deletedCount === 1) {
           console.log(`Document  deleted successfully.`);
           res.status(200).json({ success: true, message: 'User successfully deleted !' })
+        } else {
+          console.log(`Document not found.`);
+          res.status(200).json({ success: false, message: `Document with ID ${idToDelete} not found.` })
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
+};
+
+exports.deletePost = (req, res) => {
+  Post.deleteOne({ _id: req.body.post_id })
+      .then(result => {
+        if (result.deletedCount === 1) {
+          console.log(`Document  deleted successfully.`);
+          res.status(200).json({ success: true, message: 'Post successfully deleted !' })
         } else {
           console.log(`Document not found.`);
           res.status(200).json({ success: false, message: `Document with ID ${idToDelete} not found.` })

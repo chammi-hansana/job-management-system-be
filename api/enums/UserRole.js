@@ -1,7 +1,6 @@
 const UserRole = {
     ADMIN: 'Admin',
-    SEEKER: 'Seeker',
-    EMPLOYER: 'Employer',
+    USER: 'User',
 }
 
 
